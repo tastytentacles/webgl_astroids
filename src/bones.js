@@ -69,7 +69,9 @@ class Game {
 
   		this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
   	}
-    this.gl.uniform4fv(prog.asp, aspect);
+    this.gl.uniform4fv(this.prog.asp, aspect);
+
+    this.gl
 
     // for (var n = 0; n < obj_count; n++) {
   	// 	gl.uniform3fv(prog.colour, colour_mat);
@@ -113,3 +115,14 @@ function grep_shader(gl, id) {
 
 	return shad_shad;
 }
+
+let rAniFrame = (
+  function() {
+    return window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function(callback, element) { window.setTimeout(callback, 1000/60); };
+  }
+)();
