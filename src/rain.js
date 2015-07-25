@@ -18,8 +18,8 @@ function petrichor() {
     -0.2, 0.5, 0.0 ];
   let indis = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ];
-  let rock = new ModelShell(game.gl, verts, indis);
-  game.model_stack.push(rock);
+  let rock = new Model(game.gl, verts, indis);
+  game.new_model(rock);
 
   render_loop();
 }

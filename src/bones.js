@@ -1,4 +1,4 @@
-class ModelShell {
+class Model {
   constructor(gl, v, i) {
     this.vert = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vert);
@@ -11,6 +11,19 @@ class ModelShell {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
     this.indi_size = i.length;
+  }
+}
+
+class Point2D {
+  constructor($x, $y) {
+    this.x = $x;
+    this.y = $y;
+  }
+}
+
+class GameObj extends Point2D {
+  constructor($x, $y) {
+    super();
   }
 }
 
@@ -42,7 +55,8 @@ class Game {
       { alert("Shader died, RIP Shader"); }
     this.gl.useProgram(this.prog);
 
-    this.prog.pos = this.gl.getUniformLocation(this.prog, "vecPos");
+    this.prog.pos = this.gl.getAttribLocation(this.prog, "vecPos");
+    this.prog.asp = this.gl.getUniformLocation(this.prog, "asp");
   }
 
   new_model(m) {
@@ -50,35 +64,24 @@ class Game {
   }
 
   draw() {
-    // this.c.width  = window.innerWidth;
-    // this.c.height = window.innerHeight;
+    this.c.width  = window.innerWidth;
+    this.c.height = window.innerHeight;
 
     this.gl.clearColor(0.05, 0.05, 0.05, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-    let dw = window.innerWidth;
-  	let dh = window.innerHeight;
   	let aspect = [this.gl.canvas.height / this.gl.canvas.width, 1.0, 1.0, 1.0];
-
-  	if (this.gl.canvas.width != dw ||
-  		this.gl.canvas.height != dh) {
-
-  		this.gl.canvas.width = dw;
-  		this.gl.canvas.height = dh;
-
-  		this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-  	}
+  	// 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.uniform4fv(this.prog.asp, aspect);
 
-    // for (let n = 0; n < this.model_stack[0].indi_size; n++) {
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.model_stack[0].vert);
-      this.gl.vertexAttribPointer(this.prog.vecPos, 3, this.gl.FLOAT, false, 0, 0);
-      this.gl.enableVertexAttribArray(this.prog.vecPos);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.model_stack[0].vert);
+    this.gl.vertexAttribPointer(this.prog.vecPos, 3, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(this.prog.vecPos);
 
-      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.model_stack[0].indi);
-      this.gl.drawElements(this.gl.LINE_LOOP,this.model_stack[0].indi_size, this.gl.UNSIGNED_SHORT, 0);
-    // }
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.model_stack[0].indi);
+    this.gl.drawElements(this.gl.LINE_LOOP,this.model_stack[0].indi_size, this.gl.UNSIGNED_SHORT, 0);
 
     // for (var n = 0; n < obj_count; n++) {
   	// 	gl.uniform3fv(prog.colour, colour_mat);

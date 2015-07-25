@@ -6,8 +6,10 @@
 		<script id="shader-vs" type="x-shader/x-vertex">
 			attribute vec3 vecPos;
 
+			uniform vec4 asp;
+
 			void main(void) {
-				gl_Position = vec4(vecPos, 1.0);
+				gl_Position = asp * vec4(vecPos, 1.0);
 			}
 		</script>
 
@@ -17,7 +19,7 @@
 			#endif
 
 			void main(void) {
-				gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 			}
 		</script>
 
