@@ -21,8 +21,8 @@ class Game {
     this.model_stack = [];
 
     this.c = document.getElementById(canvas_id);
-    var wgl = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
-    for (var n = 0; n < wgl.length; ++n) {
+    let wgl = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    for (let n = 0; n < wgl.length; ++n) {
       try { this.gl = this.c.getContext(wgl[n]); }
       catch (e) {}
       if (this.gl) { break; }
@@ -32,8 +32,8 @@ class Game {
       { alert("dead webGL; RIP"); }
 
 
-    var vs = grep_shader(this.gl, "shader-vs");
-    var fs = grep_shader(this.gl, "shader-fs");
+    let vs = grep_shader(this.gl, "shader-vs");
+    let fs = grep_shader(this.gl, "shader-fs");
     this.prog = this.gl.createProgram();
     this.gl.attachShader(this.prog, vs);
     this.gl.attachShader(this.prog, fs);
@@ -50,19 +50,47 @@ class Game {
   }
 
   draw() {
-    this.c.width  = window.innerWidth;
-    this.c.height = window.innerHeight;
+    // this.c.width  = window.innerWidth;
+    // this.c.height = window.innerHeight;
 
-    this.gl.clearColor(1.0, 0.0, 1.0, 1.0);
+    this.gl.clearColor(0.05, 0.05, 0.05, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+    let dw = window.innerWidth;
+  	let dh = window.innerHeight;
+  	let aspect = [this.gl.canvas.height / this.gl.canvas.width, 1.0, 1.0, 1.0];
+
+  	if (this.gl.canvas.width != dw ||
+  		this.gl.canvas.height != dh) {
+
+  		this.gl.canvas.width = dw;
+  		this.gl.canvas.height = dh;
+
+  		this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+  	}
+    this.gl.uniform4fv(prog.asp, aspect);
+
+    // for (var n = 0; n < obj_count; n++) {
+  	// 	gl.uniform3fv(prog.colour, colour_mat);
+  	// 	gl.uniform3fv(prog.pos, box_stack[n].pos);
+  	// 	gl.uniform3fv(prog.scl, box_stack[n].scl);
+  	// 	gl.uniform1f(prog.rot, box_stack[n].rot);
+    //
+  	// 	gl.bindBuffer(gl.ARRAY_BUFFER, model_stack[0].vert);
+  	// 	gl.vertexAttribPointer(prog.vecPos, 3, gl.FLOAT, false, 0, 0);
+  	// 	gl.enableVertexAttribArray(prog.vecPos);
+    //
+  	// 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model_stack[0].indi);
+  	// 	gl.drawElements(gl.LINE_LOOP, model_stack[0].indi_size, gl.UNSIGNED_SHORT, 0);
+  	// }
   }
 }
 
 function grep_shader(gl, id) {
-	var shad_raw = document.getElementById(id);
-	var shad_pass = "";
-	var k = shad_raw.firstChild;
+	let shad_raw = document.getElementById(id);
+	let shad_pass = "";
+	let k = shad_raw.firstChild;
 	while (k) {
 		if (k.nodeType == 3) {
 			shad_pass += k.textContent;
@@ -70,7 +98,7 @@ function grep_shader(gl, id) {
 		k = k.nextSibling;
 	}
 
-	var shad_shad = null;
+	let shad_shad = null;
 	if (shad_raw.type == "x-shader/x-vertex")
 		{ shad_shad = gl.createShader(gl.VERTEX_SHADER); }
 	else if (shad_raw.type == "x-shader/x-fragment")
