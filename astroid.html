@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>AXE GAME AND FUCKING WEBGL</title>
+		<meta charset="UTF-8">
+		<title>webGL</title>
 
 		<script id="shader-vs" type="x-shader/x-vertex">
 			attribute vec3 vec_pos;
 
+			uniform float zoom;
 			uniform vec4 asp;
 			uniform vec3 obj_pos;
 
 			void main(void) {
-				gl_Position = asp * vec4((vec_pos + obj_pos), 1.0);
+				vec4 zoom_vec4 = vec4(zoom, zoom, 1.0, 1.0);
+
+				gl_Position = (asp * vec4((vec_pos + obj_pos), 1.0)) / zoom_vec4;
 			}
 		</script>
 
@@ -19,8 +23,10 @@
 			precision highp float;
 			#endif
 
+			uniform float time;
+
 			void main(void) {
-				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+				gl_FragColor = vec4(sin(gl_FragCoord.x), cos(gl_FragCoord.y), tan(time), 1.0);
 			}
 		</script>
 

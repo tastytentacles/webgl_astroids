@@ -14,14 +14,15 @@ class Model {
   }
 }
 
-class GameObj extends Point2D {
+class GameObj {
   constructor($x, $y, $model) {
-    super($x, $y);
+    this.pos = new Point2D($x, $y);
+    this.direct = new Point2D((Math.random() * 2) - 1, (Math.random() * 2) - 1);
     this.model = $model;
   }
 
   logic_loop() {
-
+    this.pos = PointMath.add(this.pos, this.direct);
   }
 }
 
@@ -56,8 +57,11 @@ class Game {
 
     this.prog.pos = this.gl.getAttribLocation(this.prog, "vec_pos");
 
+    this.prog.zoom = this.gl.getUniformLocation(this.prog, "zoom")
     this.prog.asp = this.gl.getUniformLocation(this.prog, "asp");
     this.prog.obj_pos = this.gl.getUniformLocation(this.prog, "obj_pos");
+
+    this.prog.s_time = this.gl.getUniformLocation(this.prog, "time");
   }
 
   new_model(m) {
@@ -83,13 +87,22 @@ class Game {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-  	let aspect = [this.gl.canvas.height / this.gl.canvas.width, 1.0, 1.0, 1.0];
+    let aspect = [1.0, 1.0, 1.0, 1.0];
+    if (this.gl.canvas.width < this.gl.canvas.height) {
+      aspect[1] = this.gl.canvas.width / this.gl.canvas.height;
+    } else {
+      aspect[0] = this.gl.canvas.height / this.gl.canvas.width;
+    }
+
+  	// let aspect = [this.gl.canvas.height / this.gl.canvas.width, 1.0, 1.0, 1.0];
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.uniform4fv(this.prog.asp, aspect);
+    this.gl.uniform1f(this.prog.zoom, 10.0);
+    this.gl.uniform1f(this.prog.s_time, new Date().getMilliseconds());
 
     for (let n = 0; n < this.obj_stack.length; n++) {
       let m = this.obj_stack[n].model;
-      let p = [this.obj_stack[n].x, this.obj_stack[n].y, 0.0];
+      let p = [this.obj_stack[n].pos.x, this.obj_stack[n].pos.y, 0.0];
       this.gl.uniform3fv(this.prog.obj_pos, p);
 
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.model_stack[m].vert);
