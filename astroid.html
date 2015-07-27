@@ -4,12 +4,13 @@
 		<title>AXE GAME AND FUCKING WEBGL</title>
 
 		<script id="shader-vs" type="x-shader/x-vertex">
-			attribute vec3 vecPos;
+			attribute vec3 vec_pos;
 
 			uniform vec4 asp;
+			uniform vec3 obj_pos;
 
 			void main(void) {
-				gl_Position = asp * vec4(vecPos, 1.0);
+				gl_Position = asp * vec4((vec_pos + obj_pos), 1.0);
 			}
 		</script>
 
@@ -23,6 +24,7 @@
 			}
 		</script>
 
+		<script src="lib/vec_logic.js" type="text/javascript"></script>
 		<script src="lib/bones.js" type="text/javascript"></script>
 		<script src="lib/rain.js" type="text/javascript"></script>
 	</head>
