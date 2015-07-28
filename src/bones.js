@@ -17,12 +17,15 @@ class Model {
 class GameObj {
   constructor($x, $y, $model) {
     this.pos = new Point2D($x, $y);
-    this.direct = new Point2D((Math.random() * 2) - 1, (Math.random() * 2) - 1);
+    this.vec = new Vec2D(Math.random() * 360, Math.random() * 0.5);
     this.model = $model;
   }
 
   logic_loop() {
-    this.pos = PointMath.add(this.pos, this.direct);
+    let gravity = Vec2D.vec_between(new Point2D(0, 0), this.pos);
+    gravity.mag = 0.01;
+    this.vec = Vec2D.add(this.vec, gravity);
+    this.pos = Point2D.add_vec(this.vec, this.pos);
   }
 }
 
@@ -89,12 +92,11 @@ class Game {
 
     let aspect = [1.0, 1.0, 1.0, 1.0];
     if (this.gl.canvas.width < this.gl.canvas.height) {
-      aspect[1] = this.gl.canvas.width / this.gl.canvas.height;
+      aspect[1] = this.c.width / this.c.height;
     } else {
-      aspect[0] = this.gl.canvas.height / this.gl.canvas.width;
+      aspect[0] = this.c.height / this.c.width;
     }
 
-  	// let aspect = [this.gl.canvas.height / this.gl.canvas.width, 1.0, 1.0, 1.0];
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.uniform4fv(this.prog.asp, aspect);
     this.gl.uniform1f(this.prog.zoom, 10.0);

@@ -26,7 +26,8 @@
 			uniform float time;
 
 			void main(void) {
-				gl_FragColor = vec4(sin(gl_FragCoord.x), cos(gl_FragCoord.y), tan(time), 1.0);
+				vec4 wave = vec4(sin(gl_FragCoord.x / 8.0), sin(gl_FragCoord.y / 8.0), 0.0, 0.0);
+				gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - (wave / 2.0);
 			}
 		</script>
 
