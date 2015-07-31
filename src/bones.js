@@ -15,10 +15,10 @@ class Model {
 }
 
 class GameObj {
-  constructor($x, $y, $model) {
-    this.pos = new Point2D($x, $y);
+  constructor(x, y, model) {
+    this.pos = new Point2D(x, y);
     this.vec = new Vec2D(Math.random() * 360, Math.random() * 0.5);
-    this.model = $model;
+    this.model = model;
   }
 
   logic_loop() {
@@ -71,8 +71,8 @@ class Game {
     this.model_stack.push(m);
   }
 
-  new_obj($x, $y, $model) {
-    let t = new GameObj($x, $y, $model);
+  new_obj(x, y, model) {
+    let t = new GameObj(x, y, model);
     this.obj_stack.push(t);
   }
 
